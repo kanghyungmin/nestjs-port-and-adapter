@@ -1,14 +1,13 @@
-// // import { NestFactory } from '@nestjs/core';
-// // import { AppModule } from './app.module';
+// import { ServerApplication } from "@application/ServerApplication";
 
-// // async function bootstrap() {
-// //   const app = await NestFactory.create(AppModule);
-// //   await app.listen(3000);
-// // }
-// // bootstrap();
-// import { ServerApplication } from '@application/ServerApplication';
+import { ServerApplication } from "@application/ServerApplication";
 
-// async function runApplication() {
-//   const serverApplication : ServerApplication = ServerApplication.new();
-//   await serverApplication.start();
-// }
+
+async function runApplication() : Promise<void> {
+    const serverApplication : ServerApplication = ServerApplication.new();
+    await serverApplication.run();
+}
+
+(async () : Promise<void> {
+    await runApplication();
+})()
