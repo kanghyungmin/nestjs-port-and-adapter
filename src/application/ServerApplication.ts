@@ -1,4 +1,8 @@
-import { NestApplication } from "@nestjs/core";
+import { ApiServerConfig } from "@infrastructure/config/ApiServerConfig";
+import { Logger } from "@nestjs/common";
+import { NestApplication, NestFactory } from "@nestjs/core";
+import { NestExpressApplication } from "@nestjs/platform-express";
+import { DocumentBuilder, OpenAPIObject, SwaggerModule } from "@nestjs/swagger";
 
 export class ServerApplication {
     private readonly host : string = ApiServerConfig.HOST;
@@ -10,7 +14,7 @@ export class ServerApplication {
         this.logs()
         await app.listen(this.port)
     }
-    private log() : void {
+    private logs() : void {
         Logger.log(`Server running on host : ${this.host}, port : ${this.port}`, ServerApplication.name)
     }
     
@@ -19,12 +23,12 @@ export class ServerApplication {
         const description : string = "Nestjs-DDD-Templates API Documentation";
         const version : string = "1.0.0";
 
-        const options : Omit<OpenAPIObjec, 'paths'>  = new DocumentBuilder()
+        const options : Omit<OpenAPIObject, 'paths'>  = new DocumentBuilder()
         .setTitle(title)
         .setDescription(description)
         .setVersion(version)
         .addBearerAuth({
-            type: 'apikey',
+            type: 'apiKey',
             in: 'header',
             name: ApiServerConfig.ACCESS_TOKEN_HEADER
         })
