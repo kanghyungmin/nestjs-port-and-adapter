@@ -100,4 +100,11 @@ export class User extends Entity<string> {
 
         await this.validate()
     }
+    public static async new(payload : CreateUserEntityPayload) : Promise<User> {
+        const user : User = new User(payload);
+        
+        await user.hashPassword();
+        await user.validate();
+        return user;
+    }
 }
