@@ -1,6 +1,6 @@
 
 
-export interface CreateUserParam { 
+export interface CreateUserPort { 
     firstName : string;
     lastName : string;
     email : string;
