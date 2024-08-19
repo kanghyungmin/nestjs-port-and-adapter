@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+  postgresql_local:
+    build: docker/postgres/.
+    env_file:
+      - env/local.pg.env
+    ports:
+      - '5454:5432'
+    networks:
+      - db_network_local
+    volumes:
+      - pg_data_local:/var/lib/postgresql/data
+
+volumes:
+  pg_data_local:
+
+networks:
+  db_network_local:
+    driver: bridge
