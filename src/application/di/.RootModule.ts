@@ -1,7 +1,7 @@
 
 import { Module } from '@nestjs/common';
-import { InfrastructureModule } from './InfrastructureModule';
-import { UserModule } from './UserModule';
+import { InfrastructureModule } from '@application/di/InfrastructureModule';
+import { UserModule } from '@application/di/UserModule';
 
 
 

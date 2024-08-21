@@ -2,7 +2,7 @@ import { ApiServerConfig } from "@infrastructure/config/ApiServerConfig";
 import { Logger } from "@nestjs/common";
 import { NestApplication, NestFactory } from "@nestjs/core";
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from "@nestjs/swagger";
-import { RootModule } from './di/RootModule'
+import { RootModule } from '@application/di/.RootModule'
 
 export class ServerApplication {
     private readonly host : string = ApiServerConfig.HOST;
