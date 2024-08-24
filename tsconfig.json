@@ -25,5 +25,5 @@
     }
 
   },
-  "include": ["./src/**/*.ts", "./test/**/*.ts", "src/application/di/.RootModule.ts"]
+  "include": ["./src/**/*.ts", "./test/**/*.ts"]
 }
