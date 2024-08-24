@@ -1,22 +1,9 @@
 import { join } from 'path';
 import { DataSource } from 'typeorm';
+import { PostgresDataSource } from './src/infrastructure/adapter/persistence/typeorm/DataSource';
 
-console.log(__dirname,'aaä')
-console.log('bbb',join(__dirname, 'migrations/*.ts'))
-export const AppDataSource = new DataSource({
-    type: "postgres",
-    host: "localhost",
-    port: 5454,
-    username: "kang",
-    password: "1234",
-    database: "testDB",
-    entities: ["src/infrastructure/adapter/persistence/typeorm/entity/**/*.{ts,js}"],
-    migrations: ['migrations/*.{ts,js}'],
-    synchronize: true,
-    logging: false,
-});
+export const AppDataSource = PostgresDataSource
 
-// Initialize the data source (this part is optional, but recommended for debugging)
 AppDataSource.initialize()
     .then(() => {
         console.log("Data Source has been initialized!");
@@ -24,3 +11,11 @@ AppDataSource.initialize()
     .catch((err) => {
         console.error("Error during Data Source initialization:", err);
     });
+
+
+    //yarn migration:create ./migrations/name
+    //yarn migration:generate ./migrations/name
+    //yarn migration:run
+    //yarn migration:revert
+
+

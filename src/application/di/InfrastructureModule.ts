@@ -12,7 +12,8 @@ import { Global, Module, OnApplicationBootstrap, Provider } from "@nestjs/common
 import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core"
 import { CqrsModule } from "@nestjs/cqrs"
 import { initializeTransactionalContext } from "typeorm-transactional-cls-hooked"
-import { TypeOrmModule } from '@nestjs/typeorm'
+
+import { PostgresDataSource } from "@infrastructure/adapter/persistence/typeorm/DataSource"
 
 
 const providers: Provider[] = [
@@ -40,32 +41,26 @@ const providers: Provider[] = [
       useClass: NestHttpLoggingInterceptor,
     })
   }
+
+  providers.push({
+    provide : 'DATA_SOURCE',
+    useFactory: async () => {
+      const dataSource =  PostgresDataSource
+      return dataSource.initialize()
+    }
+  })
   
   @Global()
   @Module({
     imports: [
       CqrsModule,
-      TypeOrmModule.forRoot({
-        name                     : 'default',
-        type                     : 'postgres',
-        host                     : DatabaseConfig.DB_HOST,
-        port                     : DatabaseConfig.DB_PORT,
-        username                 : DatabaseConfig.DB_USERNAME,
-        password                 : DatabaseConfig.DB_PASSWORD,
-        database                 : DatabaseConfig.DB_NAME,
-        logging                  : DatabaseConfig.DB_LOG_ENABLE ? 'all' : false,
-        logger                   : DatabaseConfig.DB_LOG_ENABLE ? TypeOrmLogger.new() : undefined,
-        entities                 : [`${TypeOrmDirectory}/entity/**/*{.ts,.js}`],
-        migrationsRun            : true,
-        migrations               : [`${TypeOrmDirectory}/migration/**/*{.ts,.js}`],
-        migrationsTransactionMode: 'all',
-      })
     ],
     providers: providers,
     exports: [
       CoreDITokens.CommandBus,
       CoreDITokens.QueryBus,
       CoreDITokens.EventBus,
+      'DATA_SOURCE'
     ]
   })
   export class InfrastructureModule implements OnApplicationBootstrap {
