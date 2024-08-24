@@ -5,14 +5,16 @@ import { HandleGetUserPreviewQueryService } from "@core/service/user/HandlerGetU
 import { TypeOrmUserRepositoryAdapter } from "@infrastructure/adapter/persistence/typeorm/repository/user/TypeOrmUserRepositoryAdapter"
 import { NestWrapperGetUserPreviewQueryHandler } from "@infrastructure/handler/user/NestWrapperGetUserPreviewQueryHandler"
 import { Module, Provider } from "@nestjs/common"
-import { Connection } from "typeorm"
+import { Connection, DataSource } from "typeorm"
 
 
 const persistenceProviders: Provider[] = [
     {
       provide   : UserDITokens.UserRepository,
-      useFactory: connection => connection.getCustomRepository(TypeOrmUserRepositoryAdapter),
-      inject    : [Connection]
+      useFactory: (dataSource: DataSource) => {
+        return dataSource.getRepository(TypeOrmUserRepositoryAdapter);
+      },
+      inject    : ['DATA_SOURCE']
     }
   ]
   
