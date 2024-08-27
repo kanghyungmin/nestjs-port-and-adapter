@@ -15,6 +15,7 @@ export const PostgresDataSource = new DataSource({
     database: DatabaseConfig.DB_NAME,
     entities: [
         `${TypeOrmDirectory}/entity/**/*.ts`,
+        'dist/infrastructure/adapter/persistence/typeorm/entity/**/*.js',
     ],
     migrations : [
       "dist/migrations/**/*.js"
