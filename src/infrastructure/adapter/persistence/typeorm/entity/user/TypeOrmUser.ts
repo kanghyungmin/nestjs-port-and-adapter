@@ -21,10 +21,10 @@ export class TypeOrmUser {
     @Column() 
     public createdAt : Date;
 
-    @Column() 
+    @Column({ nullable: true }) 
     public updatedAt : Date;
 
-    @Column() 
+    @Column({ nullable: true }) 
     public removedAt : Date;
 
 }
