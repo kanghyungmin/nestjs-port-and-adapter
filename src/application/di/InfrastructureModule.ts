@@ -43,7 +43,7 @@ const providers: Provider[] = [
   }
 
   providers.push({
-    provide : 'DATA_SOURCE',
+    provide : CoreDITokens.DataSource,
     useFactory: async () => {
       const dataSource =  PostgresDataSource
       return dataSource.initialize()
@@ -60,7 +60,7 @@ const providers: Provider[] = [
       CoreDITokens.CommandBus,
       CoreDITokens.QueryBus,
       CoreDITokens.EventBus,
-      'DATA_SOURCE'
+      CoreDITokens.DataSource,
     ]
   })
   export class InfrastructureModule implements OnApplicationBootstrap {
