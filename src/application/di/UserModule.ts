@@ -5,7 +5,7 @@ import { HandleGetUserPreviewQueryService } from "@core/service/user/HandlerGetU
 import { TypeOrmUserRepositoryAdapter } from "@infrastructure/adapter/persistence/typeorm/repository/user/TypeOrmUserRepositoryAdapter"
 import { NestWrapperGetUserPreviewQueryHandler } from "@infrastructure/handler/user/NestWrapperGetUserPreviewQueryHandler"
 import { Module, Provider } from "@nestjs/common"
-import { Connection, DataSource } from "typeorm"
+import { DataSource } from "typeorm"
 
 
 const persistenceProviders: Provider[] = [

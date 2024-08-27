@@ -43,6 +43,7 @@ private handleNestError(error: Error, errorResponse: CoreApiResponse<unknown>): 
     return errorResponse
   }
   
+  // 내부 Exception 처리용
   private handleCoreException(error: Error, errorResponse: CoreApiResponse<unknown>): CoreApiResponse<unknown> {
     if (error instanceof Exception) {
       errorResponse = CoreApiResponse.error(error.code, error.message, error.data)

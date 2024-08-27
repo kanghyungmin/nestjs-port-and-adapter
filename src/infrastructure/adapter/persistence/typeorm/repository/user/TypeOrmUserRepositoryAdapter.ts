@@ -1,10 +1,10 @@
 import { Optional } from "@core/common/type/CommonType";
 import { User } from "@core/domain/user/entity/User";
 import { UserRepositoryPort } from "@core/domain/user/port/persistence/UserRepositoryPort"; 
-import { TypeOrmUser } from "../../entity/user/TypeOrmUser";
-import { DataSource, InsertResult, Repository, SelectQueryBuilder } from "typeorm";
-import { TypeOrmUserMapper } from "../../entity/user/mapper/TypeOrmUserMapper";
-import { PostgresDataSource } from "../../DataSource";
+import { TypeOrmUser } from "@infrastructure/adapter/persistence/typeorm/entity/user/TypeOrmUser";
+import { InsertResult, Repository, SelectQueryBuilder } from "typeorm";
+import { TypeOrmUserMapper } from "@infrastructure/adapter/persistence/typeorm/entity/user/mapper/TypeOrmUserMapper";
+import { PostgresDataSource } from "@infrastructure/adapter/persistence/typeorm/DataSource";
 
 export class TypeOrmUserRepositoryAdapter extends Repository<TypeOrmUser> implements UserRepositoryPort {
     private readonly userAlias = 'user';
