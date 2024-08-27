@@ -13,7 +13,9 @@ import { CreateUserPort } from "@core/domain/user/port/port/CreateUserPort";
 
 
 export class CreateUserService implements CreateUserUseCase {
-    constructor(private readonly UserRepository : UserRepositoryPort) {}
+    constructor(
+        private readonly UserRepository : UserRepositoryPort
+    ) {}
     
     public async execute(payload : CreateUserPort) : Promise<UserUseCaseDto> {
         const doesUserExist : boolean = !!(await this.UserRepository.countUsers({email : payload.email}));
@@ -21,7 +23,6 @@ export class CreateUserService implements CreateUserUseCase {
             code : Code.ENTITY_ALREADY_EXISTS,
             overrideMessage : 'User already exists'
         }))
-
         const user: User = await  User.new({
             firstName : payload.firstName,
             lastName : payload.lastName, 

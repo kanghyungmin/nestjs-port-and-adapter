@@ -2,15 +2,15 @@ import { Optional } from "@core/common/type/CommonType";
 import { User } from "@core/domain/user/entity/User";
 import { UserRepositoryPort } from "@core/domain/user/port/persistence/UserRepositoryPort"; 
 import { TypeOrmUser } from "@infrastructure/adapter/persistence/typeorm/entity/user/TypeOrmUser";
-import { InsertResult, Repository, SelectQueryBuilder } from "typeorm";
+import { EntityManager, InsertResult, Repository, SelectQueryBuilder } from "typeorm";
 import { TypeOrmUserMapper } from "@infrastructure/adapter/persistence/typeorm/entity/user/mapper/TypeOrmUserMapper";
 import { PostgresDataSource } from "@infrastructure/adapter/persistence/typeorm/DataSource";
 
 export class TypeOrmUserRepositoryAdapter extends Repository<TypeOrmUser> implements UserRepositoryPort {
     private readonly userAlias = 'user';
   
-    constructor() {
-      super(TypeOrmUser, PostgresDataSource.manager); // TypeOrmUser 엔티티와 AppDataSource의 매니저를 넘겨줍니다.
+    constructor(manager: EntityManager) {
+      super(TypeOrmUser, manager);
     }
   
     private buildUserQueryBuilder(): SelectQueryBuilder<TypeOrmUser> {

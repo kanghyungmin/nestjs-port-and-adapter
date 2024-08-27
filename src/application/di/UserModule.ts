@@ -1,10 +1,13 @@
 import { UserController } from "@application/controller/UserController"
+import { CoreDITokens } from "@core/common/di/CoreDITokens"
 import { UserDITokens } from "@core/domain/user/di/UserDITokens"
 import { CreateUserService } from "@core/service/user/CreateUserService"
 import { HandleGetUserPreviewQueryService } from "@core/service/user/HandlerGetUserPreviewQueryService"
+import { TypeOrmUser } from "@infrastructure/adapter/persistence/typeorm/entity/user/TypeOrmUser"
 import { TypeOrmUserRepositoryAdapter } from "@infrastructure/adapter/persistence/typeorm/repository/user/TypeOrmUserRepositoryAdapter"
 import { NestWrapperGetUserPreviewQueryHandler } from "@infrastructure/handler/user/NestWrapperGetUserPreviewQueryHandler"
 import { Module, Provider } from "@nestjs/common"
+import { TypeOrmModule } from "@nestjs/typeorm"
 import { DataSource } from "typeorm"
 
 
@@ -12,9 +15,10 @@ const persistenceProviders: Provider[] = [
     {
       provide   : UserDITokens.UserRepository,
       useFactory: (dataSource: DataSource) => {
-        return dataSource.getRepository(TypeOrmUserRepositoryAdapter);
+        const manager = dataSource.manager;
+        return new TypeOrmUserRepositoryAdapter(manager);
       },
-      inject    : ['DATA_SOURCE']
+      inject    : [CoreDITokens.DataSource]
     }
   ]
   
@@ -45,7 +49,7 @@ const persistenceProviders: Provider[] = [
       ...handlerProviders,
     ],
     exports: [
-      UserDITokens.UserRepository
+      // UserDITokens.UserRepository
     ]
   })
   export class UserModule {}
