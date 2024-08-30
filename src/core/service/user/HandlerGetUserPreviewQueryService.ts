@@ -4,10 +4,13 @@ import { Optional } from '@core/common/type/CommonType'
 import { User } from '@core/domain/user/entity/User'
 import { UserRepositoryPort } from '@core/domain/user/port/persistence/UserRepositoryPort'
 import { GetUserPreviewQueryHandler } from '@core/domain/user/port/handler/GetUserPreviewQueryHandler'
+import { UserDITokens } from '@core/domain/user/di/UserDITokens'
+import { Inject } from '@nestjs/common'
 
 export class HandleGetUserPreviewQueryService implements GetUserPreviewQueryHandler {
   
   constructor(
+    @Inject(UserDITokens.UserRepository)
     private readonly userRepository: UserRepositoryPort,
   ) {}
   
@@ -16,7 +19,7 @@ export class HandleGetUserPreviewQueryService implements GetUserPreviewQueryHand
     
     const user: Optional<User> = await this.userRepository.findUser(query.by)
     if (user) {
-      queryResult = GetUserPreviewQueryResult.new(user.getId(), user.getName())
+      queryResult = GetUserPreviewQueryResult.new(user)
     }
     
     return queryResult

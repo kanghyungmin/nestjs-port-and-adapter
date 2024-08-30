@@ -1,7 +1,7 @@
 export class UserDITokens {
     // Use-cases 
     public static readonly CreateUserUseCase = Symbol('CreateUserUseCase');
-    public static readonly GetUserUseCase = Symbol('GetUserUseCase');
+    public static readonly FindUserUseCase = Symbol('FindUserUseCase');
 
     // Handlers 
     public static readonly GetUserPreviewQueryHandler = Symbol('GetUserPreviewQueryHandler');   

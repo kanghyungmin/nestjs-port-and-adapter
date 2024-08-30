@@ -1,15 +1,20 @@
+import { User } from "@core/domain/user/entity/User";
 
 export class GetUserPreviewQueryResult {
 
     public readonly id: string;
-    public readonly name : string;
+    public readonly firstName : string;
+    public readonly lastName : string;
+    public readonly email : string;
 
-    constructor(id : string, name : string) {
-        this.id = id;
-        this.name = name;
+    constructor(user: User) {
+        this.id = user.getId();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.email = user.getEmail()
     }
 
-    public static new(id : string, name : string) : GetUserPreviewQueryResult {
-        return new GetUserPreviewQueryResult(id, name);
+    public static new(user: User) : GetUserPreviewQueryResult {
+        return new GetUserPreviewQueryResult(user);
     }
 }

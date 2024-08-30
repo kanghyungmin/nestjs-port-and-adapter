@@ -14,7 +14,7 @@ import { CreateUserPort } from "@core/domain/user/port/port/CreateUserPort";
 
 export class CreateUserService implements CreateUserUseCase {
     constructor(
-        private readonly UserRepository : UserRepositoryPort
+        private readonly UserRepository : UserRepositoryPort,
     ) {}
     
     public async execute(payload : CreateUserPort) : Promise<UserUseCaseDto> {
