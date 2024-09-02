@@ -59,10 +59,11 @@ export class CoreAssert {
 
         }
     }
-    public static isNotEmpty(value : any, exception: Error) : void {
+    public static isNotEmpty<T>(value : Optional<Nullable<T>>, exception: Error) : T {
         if (value === undefined || value === null || value === '') {
             throw exception;
         }
+        return value
     }
 }
 
