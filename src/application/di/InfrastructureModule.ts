@@ -4,14 +4,11 @@ import { CoreDITokens } from "@core/common/di/CoreDITokens"
 import { NestCommandBusAdapter } from "@infrastructure/adapter/message/NestCommandBusAdapter"
 import { NestEventBusAdapter } from "@infrastructure/adapter/message/NestEventBusAdapter"
 import { NestQueryBusAdapter } from "@infrastructure/adapter/message/NestQueryBusAdapter"
-import { TypeOrmLogger } from "@infrastructure/adapter/persistence/typeorm/logger/TypeOrmLogger"
-import { TypeOrmDirectory } from "@infrastructure/adapter/persistence/typeorm/TypeOrmDirectory"
 import { ApiServerConfig } from "@infrastructure/config/ApiServerConfig"
-import { DatabaseConfig } from "@infrastructure/config/DatabaseConfig"
 import { Global, Module, OnApplicationBootstrap, Provider } from "@nestjs/common"
 import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core"
 import { CqrsModule } from "@nestjs/cqrs"
-import { initializeTransactionalContext } from "typeorm-transactional-cls-hooked"
+import { initializeTransactionalContext,addTransactionalDataSource} from "typeorm-transactional"
 
 import { PostgresDataSource } from "@infrastructure/adapter/persistence/typeorm/DataSource"
 
@@ -46,7 +43,10 @@ const providers: Provider[] = [
     provide : CoreDITokens.DataSource,
     useFactory: async () => {
       const dataSource =  PostgresDataSource
-      return dataSource.initialize()
+      const retVal = await dataSource.initialize()
+      // addTransactionalDataSource(PostgresDataSource);
+
+      return retVal
     }
   })
   
@@ -66,5 +66,9 @@ const providers: Provider[] = [
   export class InfrastructureModule implements OnApplicationBootstrap {
     onApplicationBootstrap(): void {
       initializeTransactionalContext()
+        addTransactionalDataSource({
+            name: 'postgres',
+            dataSource: PostgresDataSource
+        });
     }
   }

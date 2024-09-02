@@ -6,7 +6,6 @@ import { TypeOrmLogger } from "@infrastructure/adapter/persistence/typeorm/logge
 
 
 export const PostgresDataSource = new DataSource({
-    name : "default",
     type: 'postgres', 
     host: DatabaseConfig.DB_HOST,
     port: DatabaseConfig.DB_PORT,
@@ -22,7 +21,7 @@ export const PostgresDataSource = new DataSource({
    ],
     synchronize: true,
     logging  : DatabaseConfig.DB_LOG_ENABLE ? 'all' : false,
-      logger : DatabaseConfig.DB_LOG_ENABLE ? TypeOrmLogger.new() : undefined,
+    logger : DatabaseConfig.DB_LOG_ENABLE ? TypeOrmLogger.new() : undefined,
     migrationsRun : true,
     migrationsTransactionMode: 'all',
   }

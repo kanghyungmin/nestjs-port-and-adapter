@@ -11,7 +11,7 @@ export class ServerApplication {
     public async run() : Promise<void> {
         const app : NestApplication = await NestFactory.create<NestApplication>(RootModule)
         this.buildAPIDocumentation(app)
-        this.logs()
+        this.logs()       
         await app.listen(this.port)
     }
     private logs() : void {

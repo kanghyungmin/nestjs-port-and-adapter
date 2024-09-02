@@ -6,6 +6,7 @@ import { FindUserService } from "@core/service/user/FindUserService"
 import { HandleGetUserPreviewQueryService } from "@core/service/user/HandlerGetUserPreviewQueryService"
 import { TypeOrmUserRepositoryAdapter } from "@infrastructure/adapter/persistence/typeorm/repository/user/TypeOrmUserRepositoryAdapter"
 import { NestWrapperGetUserPreviewQueryHandler } from "@infrastructure/handler/user/NestWrapperGetUserPreviewQueryHandler"
+import { TransactionalUseCaseWrapper } from "@infrastructure/transaction/TransactionalUseCaseWrapper"
 import { Module, Provider } from "@nestjs/common"
 import { DataSource } from "typeorm"
 
@@ -24,8 +25,11 @@ const persistenceProviders: Provider[] = [
   const useCaseProviders: Provider[] = [
     {
       provide   : UserDITokens.CreateUserUseCase,
-      useFactory: (userRepository) => new CreateUserService(userRepository),
-      inject    : [UserDITokens.UserRepository, CoreDITokens.QueryBus]
+      useFactory: (userRepository) => { 
+        const service  = new CreateUserService(userRepository)
+        return new TransactionalUseCaseWrapper(service)
+      },
+      inject    : [UserDITokens.UserRepository]
     },
     {
       provide   : UserDITokens.FindUserUseCase,
