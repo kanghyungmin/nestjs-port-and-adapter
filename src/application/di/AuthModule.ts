@@ -6,7 +6,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { UserModule } from "./UserModule";
 import { HttpAuthService } from "@application/auth/HttpAuthService";
-
+import { HttpJwtStrategy } from "@application/auth/passport/HttpJwtStrategy";
 
 
 @Module({
@@ -14,13 +14,13 @@ import { HttpAuthService } from "@application/auth/HttpAuthService";
     imports : [
         PassportModule,
         JwtModule.register({
-            secret : ApiServerConfig.ACCESS_TOKEN_HEADER,
+            secret : ApiServerConfig.ACCESS_TOKEN_SECRET,
             signOptions : {
                 expiresIn : `${ApiServerConfig.ACCESS_TOKEN_TTL_IN_MINUTES}m`
             },
         }),
         UserModule,
     ],
-    providers : [HttpAuthService,HttpLocalStrategy]
+    providers : [HttpAuthService,HttpLocalStrategy, HttpJwtStrategy]
 })
 export class AuthModule {}
