@@ -56,7 +56,7 @@ const persistenceProviders: Provider[] = [
       ...handlerProviders,
     ],
     exports: [
-      // UserDITokens.UserRepository
+      UserDITokens.UserRepository
     ]
   })
   export class UserModule {}
