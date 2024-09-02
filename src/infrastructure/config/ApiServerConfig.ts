@@ -6,9 +6,9 @@ export class ApiServerConfig {
   
   public static readonly PORT: number = get('API_PORT').required().asPortNumber();
   
-  // public static readonly ACCESS_TOKEN_SECRET: string = get('API_ACCESS_TOKEN_SECRET').required().asString();
+  public static readonly ACCESS_TOKEN_SECRET: string = get('API_ACCESS_TOKEN_SECRET').required().asString();
   
-  // public static readonly ACCESS_TOKEN_TTL_IN_MINUTES: number = get('API_ACCESS_TOKEN_TTL_IN_MINUTES').required().asInt();
+  public static readonly ACCESS_TOKEN_TTL_IN_MINUTES: number = get('API_ACCESS_TOKEN_TTL_IN_MINUTES').required().asInt();
   
   public static readonly ACCESS_TOKEN_HEADER: string = get('API_ACCESS_TOKEN_HEADER').required().asString();
   
