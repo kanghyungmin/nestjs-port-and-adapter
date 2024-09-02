@@ -1,6 +1,6 @@
 import { TransactionalUseCase } from "@core/common/usecase/TransactionalUseCase";
 import { UseCase } from "@core/common/usecase/UseCase";
-import { runOnTransactionCommit, runOnTransactionRollback, Transactional } from "typeorm-transactional-cls-hooked";
+import { runOnTransactionCommit, runOnTransactionRollback, Transactional } from "typeorm-transactional";
 
 
 
@@ -8,14 +8,16 @@ export class TransactionalUseCaseWrapper<TUseCasePort, TUseCaseResult> implement
     constructor(private readonly useCase : TransactionalUseCase<TUseCasePort, TUseCaseResult>) {}
 
 
-    @Transactional()
+    @Transactional({connectionName: 'postgres',})
     public async execute(port : TUseCasePort) : Promise<TUseCaseResult> {
         runOnTransactionRollback(async (error: Error) => {
-            this.useCase.onRollback?.(port, error)
+            () => console.log('rollback')
         })
         const result: TUseCaseResult = await this.useCase.execute(port)
 
-        runOnTransactionCommit(async () => this.useCase.onCommit?.(port,result))
+        runOnTransactionCommit(
+            ()=> console.log('commit')
+        )
 
         return result
         
