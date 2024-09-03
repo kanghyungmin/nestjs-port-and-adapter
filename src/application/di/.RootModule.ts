@@ -2,7 +2,7 @@
 import { Module } from '@nestjs/common';
 import { InfrastructureModule } from '@application/di/InfrastructureModule';
 import { UserModule } from '@application/di/UserModule';
-import { AuthModule } from './AuthModule';
+import { AuthModule} from '@application/di/AuthModule'
 
 
 

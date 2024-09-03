@@ -1,6 +1,6 @@
 import { IsDate, IsEmail, IsOptional, IsString } from 'class-validator';
-import { CreateUserEntityPayload } from './type/CreateUserEntityPayload';
-import { EditUserEntityPayload } from './type/EditUserEntityPayload';
+import { CreateUserEntityPayload } from '@core/domain/user/entity/type/CreateUserEntityPayload';
+import { EditUserEntityPayload } from '@core/domain/user/entity/type/EditUserEntityPayload';
 import { Entity } from "@core/common/entity/Entity";
 import { Nullable } from "@core/common/type/CommonType";
 import { compare, genSalt, hash } from 'bcryptjs';

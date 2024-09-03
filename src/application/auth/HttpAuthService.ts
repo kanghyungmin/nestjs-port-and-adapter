@@ -4,7 +4,7 @@ import { User } from '@core/domain/user/entity/User'
 import { UserRepositoryPort } from '@core/domain/user/port/persistence/UserRepositoryPort'
 import { Inject, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { HttpJwtPayload, HttpLoggedInUser, HttpUserPayload } from './type/HttpAuthTypes'
+import { HttpJwtPayload, HttpLoggedInUser, HttpUserPayload } from '@application/auth/type/HttpAuthTypes'
 
 @Injectable()
 export class HttpAuthService {

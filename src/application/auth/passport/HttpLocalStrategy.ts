@@ -7,7 +7,7 @@ import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy } from 'passport-local'
 import { HttpUserPayload } from '@application/auth/type/HttpAuthTypes'
-import { HttpAuthService } from '../HttpAuthService'
+import { HttpAuthService } from '@application/auth/HttpAuthService'
 
 @Injectable()
 export class HttpLocalStrategy extends PassportStrategy(Strategy) {

@@ -1,5 +1,3 @@
-import { join } from 'path';
-import { DataSource } from 'typeorm';
 import { PostgresDataSource } from './src/infrastructure/adapter/persistence/typeorm/DataSource';
 
 export const AppDataSource = PostgresDataSource

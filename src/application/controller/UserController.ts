@@ -47,7 +47,7 @@ export class UserController {
     @ApiBearerAuth()
     @ApiResponse({ status: HttpStatus.OK, type: HttpRestApiResponseUser})
     public async findAccound(@Req() request: HttpRequestWithUser,@Query() query : HttpRestApiModelFindUserQuery) : Promise<CoreApiResponse<Optional<UserUseCaseDto>>>  {
-      console.log(typeof(request.user.id))
+      // console.log(typeof(request.user.id))
       const adapter : FindUserAdapter = await FindUserAdapter.new({
         id : query.id
       })
