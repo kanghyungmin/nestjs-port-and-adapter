@@ -1,3 +1,4 @@
+import { UserRole } from "@core/common/enum/UserEnums";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 
@@ -20,6 +21,9 @@ export class TypeOrmUser {
 
     @Column() 
     public createdAt : Date;
+
+    @Column({nullable: true})
+    public role: UserRole;
 
     @Column({ nullable: true }) 
     public updatedAt : Date;
