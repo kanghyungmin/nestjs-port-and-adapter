@@ -11,8 +11,10 @@ import { HttpRestApiModelFindUserQuery } from "./documentation/user/HttpRestApiM
 import { FindUserAdapter } from "@infrastructure/adapter/usecase/FindUserAdapter";
 import { Optional } from "@core/common/type/CommonType";
 import { FindUserService } from "@core/service/user/FindUserService";
-import { HttpJwtAuthGuard } from "@application/auth/guard/HttpJwtAuthGuard";
-import { HttpRequestWithUser } from "@application/auth/type/HttpAuthTypes";
+import { HttpUserPayload } from "@application/auth/type/HttpAuthTypes";
+import { HttpAuth } from "@application/auth/decorator/HttpAuth";
+import { UserRole } from "@core/common/enum/UserEnums";
+import { HttpUser } from "@application/auth/decorator/HttpUser";
 
 @Controller('user')
 @ApiTags('user')
@@ -43,11 +45,13 @@ export class UserController {
       return CoreApiResponse.success(createdUser)
     }
     @Get('account')
-    @UseGuards(HttpJwtAuthGuard)
+    // @UseGuards(HttpJwtAuthGuard)  // Single Pattern
+    @HttpAuth(UserRole.ADMIN)        // Composite Pattern
     @HttpCode(HttpStatus.OK)
     @ApiBearerAuth()
     @ApiResponse({ status: HttpStatus.OK, type: HttpRestApiResponseUser})
-    public async findAccound(@Req() request: HttpRequestWithUser,@Query() query : HttpRestApiModelFindUserQuery) : Promise<CoreApiResponse<Optional<UserUseCaseDto>>>  {
+    // public async findAccound(@Req() request: HttpRequestWithUser,@Query() query : HttpRestApiModelFindUserQuery) : Promise<CoreApiResponse<Optional<UserUseCaseDto>>>  {
+    public async findAccound(@HttpUser() user: HttpUserPayload,@Query() query : HttpRestApiModelFindUserQuery) : Promise<CoreApiResponse<Optional<UserUseCaseDto>>>  {
       // console.log(typeof(request.user.id))
       const adapter : FindUserAdapter = await FindUserAdapter.new({
         id : query.id
