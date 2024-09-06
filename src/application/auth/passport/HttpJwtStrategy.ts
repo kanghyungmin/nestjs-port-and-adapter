@@ -29,7 +29,7 @@ export class HttpJwtStrategy extends PassportStrategy(Strategy) {
       Exception.new({code: Code.UNAUTHORIZED_ERROR})
     )
   
-    return {id: user.getId(), email: user.getEmail()}
+    return {id: user.getId(), email: user.getEmail(), role: user.getRole()}
   }
   
 }

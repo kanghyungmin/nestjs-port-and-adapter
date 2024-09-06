@@ -33,7 +33,8 @@ export class TypeOrmUserMapper {
             password: ormUser.password,
             createdAt: ormUser.createdAt,
             updatedAt: ormUser.updatedAt,
-            removedAt: ormUser.removedAt
+            removedAt: ormUser.removedAt,
+            role : ormUser.role
         })
         return domainUser
     }

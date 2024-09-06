@@ -1,7 +1,8 @@
 import { Exclude, Expose, plainToClass } from 'class-transformer';
 import { UseCaseValidatableParameter } from "@core/common/validate/UseCaseValidatableParameter";
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsIn, IsString } from 'class-validator';
 import { CreateUserPort } from '@core/domain/user/port/port/CreateUserPort';
+import { UserRole } from '@core/common/enum/UserEnums';
 
 
 @Exclude()
@@ -18,6 +19,10 @@ export class CreateUserAdapter extends UseCaseValidatableParameter implements Cr
     @Expose()
     @IsEmail()
     public email: string;
+      
+    @Expose()
+    @IsIn([UserRole.AUTHOR, UserRole.GUEST])
+    public role: UserRole;
 
     @Expose()
     @IsString()

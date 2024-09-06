@@ -35,6 +35,7 @@ export class UserController {
         lastName: body.lastName,
         email: body.email,
         password: body.password,
+        role: body.role
       })
       
       const createdUser: UserUseCaseDto = await this.createUserUseCase.execute(adapter)

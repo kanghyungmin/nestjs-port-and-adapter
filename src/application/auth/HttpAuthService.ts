@@ -22,7 +22,7 @@ export class HttpAuthService {
     if (user) {
       const isPasswordValid: boolean = await user.comparePassword(password)
       if (isPasswordValid) {
-        return {id: user.getId(), email: user.getEmail()}
+        return {id: user.getId(), email: user.getEmail(), role : user.getRole()}
       }
     }
     

@@ -1,10 +1,11 @@
-import { IsDate, IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
 import { CreateUserEntityPayload } from '@core/domain/user/entity/type/CreateUserEntityPayload';
 import { EditUserEntityPayload } from '@core/domain/user/entity/type/EditUserEntityPayload';
 import { Entity } from "@core/common/entity/Entity";
 import { Nullable } from "@core/common/type/CommonType";
 import { compare, genSalt, hash } from 'bcryptjs';
 import { v4 } from 'uuid';
+import { UserRole } from '@core/common/enum/UserEnums';
 
 export class User extends Entity<string> {
 
@@ -23,6 +24,8 @@ export class User extends Entity<string> {
     @IsDate()
     private readonly createdAt : Date;
 
+    @IsEnum(UserRole)
+    private readonly role: UserRole
 
     @IsOptional()
     @IsDate()
@@ -38,7 +41,7 @@ export class User extends Entity<string> {
         this.firstName = payload.firstName;
         this.lastName = payload.lastName;
         this.email = payload.email;
-        // this.role = payload.role;
+        this.role = payload.role;
         this.password = payload.password;
 
         this.id = payload.id || v4();
@@ -49,6 +52,9 @@ export class User extends Entity<string> {
 
     public getFirstName() : string {
         return this.firstName;
+    }
+    public getRole() : UserRole {
+        return this.role;
     }
 
     public getLastName() : string {

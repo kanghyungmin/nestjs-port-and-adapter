@@ -28,6 +28,7 @@ export class CreateUserService implements CreateUserUseCase {
             lastName : payload.lastName, 
             email : payload.email,
             password : payload.password,
+            role : payload.role
         })
         await this.UserRepository.addUser(user);
         return UserUseCaseDto.newFromUser(user);
