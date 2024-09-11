@@ -17,5 +17,9 @@ export class ApiServerConfig {
   public static readonly LOGIN_PASSWORD_FIELD: string = get('API_LOGIN_PASSWORD_FIELD').required().asString();
   
   public static readonly LOG_ENABLE: boolean = get('API_LOG_ENABLE').required().asBool();
+
+  public static readonly KAKAO_API_KEY: string = get('KAKAO_REST_API_KEY').required().asString();
+
+  public static readonly KAKAO_TOKEN_URL: string = get('KAKAO_TOKEN_URL').required().asString();
   
 }

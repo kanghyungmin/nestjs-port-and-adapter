@@ -7,6 +7,8 @@ import { PassportModule } from "@nestjs/passport";
 import { UserModule } from "./UserModule";
 import { HttpAuthService } from "@application/auth/HttpAuthService";
 import { HttpJwtStrategy } from "@application/auth/passport/HttpJwtStrategy";
+import { HttpKakaoAuthGuard } from "@application/auth/guard/HttpKakaoAuthGuard";
+import { HttpKakaoStratege } from "@application/auth/passport/HttpKakaOStratege";
 
 
 @Module({
@@ -21,6 +23,10 @@ import { HttpJwtStrategy } from "@application/auth/passport/HttpJwtStrategy";
         }),
         UserModule,
     ],
-    providers : [HttpAuthService,HttpLocalStrategy, HttpJwtStrategy]
+    providers : [
+        HttpAuthService, 
+        HttpLocalStrategy, 
+        HttpJwtStrategy, 
+        HttpKakaoStratege]
 })
 export class AuthModule {}
