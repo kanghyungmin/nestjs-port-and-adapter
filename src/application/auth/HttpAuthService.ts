@@ -4,7 +4,7 @@ import { User } from '@core/domain/user/entity/User'
 import { UserRepositoryPort } from '@core/domain/user/port/persistence/UserRepositoryPort'
 import { Inject, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { HttpJwtPayload, HttpLoggedInUser, HttpUserPayload } from '@application/auth/type/HttpAuthTypes'
+import { HttpJwtPayload, HttpKakaoUserPayload, HttpLoggedInUser, HttpRequestWithKaKaoUser, HttpUserPayload } from '@application/auth/type/HttpAuthTypes'
 
 @Injectable()
 export class HttpAuthService {
@@ -29,7 +29,7 @@ export class HttpAuthService {
     return null
   }
   
-  public login(user: HttpUserPayload): HttpLoggedInUser {
+  public login(user: HttpUserPayload | HttpKakaoUserPayload): HttpLoggedInUser {
     const payload: HttpJwtPayload = { id: user.id }
     return {
       id: user.id,

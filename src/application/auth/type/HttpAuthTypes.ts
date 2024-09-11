@@ -7,7 +7,9 @@ export type HttpUserPayload = {
   role : UserRole
 };
 
+export type HttpKakaoUserPayload = Omit<HttpUserPayload, 'email'>
 export type HttpRequestWithUser = Request & {user: HttpUserPayload};
+export type HttpRequestWithKaKaoUser = Request & {user: HttpKakaoUserPayload};
 
 export type HttpJwtPayload = {
   id: string,

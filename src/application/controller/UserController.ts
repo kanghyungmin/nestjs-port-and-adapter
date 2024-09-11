@@ -61,3 +61,4 @@ export class UserController {
       return CoreApiResponse.success(findedUser)
     }
 }
+
