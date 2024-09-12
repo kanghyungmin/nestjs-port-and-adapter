@@ -19,8 +19,8 @@ export class ServerApplication {
     }
     
     private buildAPIDocumentation(app: NestApplication) : void{
-        const title : string = "Nestjs-DDD-Templates";
-        const description : string = "Nestjs-DDD-Templates API Documentation";
+        const title : string = "Swagger API Documentation";
+        const description : string = "Swagger API Documentation";
         const version : string = "1.0.0";
 
         const options : Omit<OpenAPIObject, 'paths'>  = new DocumentBuilder()
