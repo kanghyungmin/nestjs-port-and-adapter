@@ -9,21 +9,31 @@ import { UserRole } from '@core/common/enum/UserEnums';
 
 export class User extends Entity<string> {
 
+    @IsOptional()
     @IsString()
     private firstName : string;
 
+    @IsOptional()
+    @IsString()
+    private socialID : string;
+
+    @IsOptional()
     @IsString()
     private lastName : string;
 
+    @IsOptional()
     @IsEmail()
     private readonly email : string;
 
+    @IsOptional()
     @IsString()
     private password : string;
 
+    @IsOptional()
     @IsDate()
     private readonly createdAt : Date;
 
+    @IsOptional()
     @IsEnum(UserRole)
     private readonly role: UserRole
 
@@ -38,11 +48,12 @@ export class User extends Entity<string> {
     constructor(payload: CreateUserEntityPayload) {
         super();
 
-        this.firstName = payload.firstName;
-        this.lastName = payload.lastName;
-        this.email = payload.email;
-        this.role = payload.role;
-        this.password = payload.password;
+        this.socialID = payload.socialID || null;
+        this.firstName = payload.firstName || null;
+        this.lastName = payload.lastName || null;
+        this.email = payload.email || null;
+        this.role = payload.role || null;
+        this.password = payload.password || null;
 
         this.id = payload.id || v4();
         this.createdAt = payload.createdAt || new Date();
@@ -109,7 +120,10 @@ export class User extends Entity<string> {
     public static async new(payload : CreateUserEntityPayload) : Promise<User> {
         const user : User = new User(payload);
         
-        await user.hashPassword();
+        if(payload.password) {
+            await user.hashPassword();
+        }
+        
         await user.validate();
         return user;
     }

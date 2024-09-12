@@ -4,7 +4,8 @@ import { User } from '@core/domain/user/entity/User'
 import { UserRepositoryPort } from '@core/domain/user/port/persistence/UserRepositoryPort'
 import { Inject, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { HttpJwtPayload, HttpKakaoUserPayload, HttpLoggedInUser, HttpRequestWithKaKaoUser, HttpUserPayload } from '@application/auth/type/HttpAuthTypes'
+import { HttpJwtPayload, HttpKakaoUserPayload, HttpLoggedInUser, HttpUserPayload } from '@application/auth/type/HttpAuthTypes'
+import { UserRole } from '@core/common/enum/UserEnums'
 
 @Injectable()
 export class HttpAuthService {
@@ -40,5 +41,19 @@ export class HttpAuthService {
   public async getUser(by: {id: string}): Promise<Optional<User>> {
     return this.userRepository.findUser(by)
   }
-  
+
+  public async getSocialUserWithSave(by: {socialID: string}): Promise<User> {
+
+    let user: Optional<User> = await this.userRepository.findUser({socialID: by.socialID})
+
+    if(!user) {
+      user = await User.new({
+        socialID: <string>by.socialID,
+        // email: profile._json.kakao_account.email,
+        role: UserRole.USER,
+      })
+      await this.userRepository.addUser(user)
+    }
+    return user
+  }
 }

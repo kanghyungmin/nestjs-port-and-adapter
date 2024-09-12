@@ -1,37 +1,39 @@
+import { CoreAssert } from '@core/common/util/assert/CoreAssert';
+import { User } from '@core/domain/user/entity/User';
 import { ApiServerConfig } from '@infrastructure/config/ApiServerConfig';
 import { Injectable } from '@nestjs/common'
-import { AuthGuard, PassportStrategy } from '@nestjs/passport'
+import { PassportStrategy } from '@nestjs/passport'
 import { Profile, Strategy } from 'passport-kakao';
+import { HttpKakaoUserPayload } from '../type/HttpAuthTypes';
+import { UserRole } from '@core/common/enum/UserEnums';
+import { HttpAuthService } from '@application/auth/HttpAuthService'
+import { Exception } from '@core/exception/Exception';
+import { Code } from '@core/common/code/Code';
 
 @Injectable()
 export class HttpKakaoStratege extends PassportStrategy(Strategy, 'kakao') {
-    constructor() {
+    constructor(private authService: HttpAuthService) {
         super({	
           clientID: ApiServerConfig.KAKAO_API_KEY,
           clientSecret: '',
-          callbackURL: ApiServerConfig.KAKAO_TOKEN_URL,
+          callbackURL: ApiServerConfig.KAKAO_REDIRECT_URL,
         });
       }
     
-      async validate(	// POST /oauth/token 요청에 대한 응답이 담깁니다.
+      async validate(	// POST /oauth/token 요청(by passport) 후, token 발급
         accessToken: string,
         refreshToken: string,
         profile: Profile,
-        done: (error: any, user?: any, info?: any) => void,
-      ) {
-        console.log('HttpKakaoAuthGuard');
-        console.log('accessToken', accessToken);
-        console.log('refreshToken', refreshToken);
-        console.log('profile', profile);
-        try {
-          const { _json } = profile;
-          const user = {
-            id: _json.id,
-          };
-          done(null, user);
-        } catch (error) {
-          done(error);
-        }
+      ) : Promise<HttpKakaoUserPayload>{
+
+        let user : User = await this.authService.getSocialUserWithSave({socialID: <string>profile.id})
+
+        CoreAssert.isNotEmpty(
+          await this.authService.getUser({id: user.getId()}),
+          Exception.new({code: Code.UNAUTHORIZED_ERROR, overrideMessage : "User not Found on the Kakao Strategy"})
+        )
+
+        return {id: user.getId(), role: user.getRole()}
       }
 
 }
