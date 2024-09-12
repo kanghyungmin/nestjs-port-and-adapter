@@ -16,6 +16,8 @@ export class TypeOrmUserMapper {
         ormUser.updatedAt = domainUser.getUpdatedAt() as Date;
         ormUser.removedAt = domainUser.getRemovedAt() as Date;
 
+        ormUser.role = domainUser.getRole();
+
         return ormUser;
     }
 

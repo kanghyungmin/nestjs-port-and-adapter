@@ -6,11 +6,6 @@ import { Code } from "@core/common/code/Code";
 import { Exception } from "@core/exception/Exception";
 
 
-
-
-
-
-
 @Injectable()
 export class HttpRoleAuthGuard implements CanActivate {
     constructor(

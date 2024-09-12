@@ -7,19 +7,19 @@ export class TypeOrmUser {
     @PrimaryColumn()
     public id: string;
 
-    @Column() 
+    @Column({nullable: true})
     public firstName: string;
 
-    @Column() 
+    @Column({nullable: true})
     public lastName : string
 
-    @Column() 
+    @Column({nullable: true})
     public  email : string
 
-    @Column() 
+    @Column({nullable: true}) 
     public password: string;
 
-    @Column() 
+    @Column({nullable: true}) 
     public createdAt : Date;
 
     @Column({nullable: true})
