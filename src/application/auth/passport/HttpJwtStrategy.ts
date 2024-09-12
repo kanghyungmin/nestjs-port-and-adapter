@@ -8,9 +8,9 @@ import { ApiServerConfig } from '@infrastructure/config/ApiServerConfig'
 import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
-import { HttpAuthService } from '../HttpAuthService'
+import { HttpAuthService } from '@application/auth/HttpAuthService'
 import { Exception } from '@core/exception/Exception'
-import { HttpJwtPayload, HttpUserPayload } from '../type/HttpAuthTypes'
+import { HttpJwtPayload, HttpUserPayload } from '@application/auth/type/HttpAuthTypes'
 
 @Injectable()
 export class HttpJwtStrategy extends PassportStrategy(Strategy) {

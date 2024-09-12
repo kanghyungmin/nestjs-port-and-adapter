@@ -1,10 +1,10 @@
 import { UserRole } from "@core/common/enum/UserEnums";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
 
 @Entity({ name: 'users' })
 export class TypeOrmUser {
-    @PrimaryGeneratedColumn()
+    @PrimaryColumn()
     public id: string;
 
     @Column() 

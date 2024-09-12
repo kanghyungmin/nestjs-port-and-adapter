@@ -10,15 +10,13 @@ import { UserUseCaseDto } from "@core/domain/user/usecase/dto/UserUseCaseDto";
 import { CreateUserUseCase } from "@core/domain/user/usecase/CreateUserUseCase";
 import { CreateUserPort } from "@core/domain/user/port/port/CreateUserPort";
 
-
-
 export class CreateUserService implements CreateUserUseCase {
     constructor(
         private readonly UserRepository : UserRepositoryPort,
     ) {}
     
     public async execute(payload : CreateUserPort) : Promise<UserUseCaseDto> {
-        const doesUserExist : boolean = !!(await this.UserRepository.countUsers({email : payload.email}));
+        const doesUserExist : boolean = !(await this.UserRepository.countUsers({email : payload.email}));
         CoreAssert.isFalse(doesUserExist, Exception.new({
             code : Code.ENTITY_ALREADY_EXISTS,
             overrideMessage : 'User already exists'

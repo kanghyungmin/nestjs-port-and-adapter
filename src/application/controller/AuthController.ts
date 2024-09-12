@@ -1,12 +1,11 @@
 import { HttpLocalAuthGuard } from '@application/auth/guard/HttpLocalAuthGuard'
 import { HttpAuthService } from '@application/auth/HttpAuthService'
-import { HttpKakaoUserPayload, HttpLoggedInUser, HttpRequestWithKaKaoUser, HttpRequestWithUser, HttpUserPayload } from '@application/auth/type/HttpAuthTypes'
+import { HttpLoggedInUser, HttpRequestWithKaKaoUser, HttpRequestWithUser, HttpUserPayload } from '@application/auth/type/HttpAuthTypes'
 import { CoreApiResponse } from '@core/common/api/CoreApiResponse'
 import { Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common'
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { HttpRestApiModelLogInBody } from '@application/controller/documentation/auth/HttpRestApiModelLogInBody'
 import { HttpRestApiResponseLoggedInUser } from '@application/controller/documentation/auth/HttpRestApiResponseLoggedInUser'
-import { HttpUser } from '@application/auth/decorator/HttpUser'
 import { HttpKakaoAuthGuard } from '@application/auth/guard/HttpKakaoAuthGuard'
 
 @Controller('auth')
@@ -33,11 +32,3 @@ export class AuthController {
     return CoreApiResponse.success(this.authService.login(request.user))
   }
 }
-
-
-//kakao/login 
-// 1) kakao auth
-    //  : 백엔드에서 카카오로 요청
-// 2) kakao/redirect? 
-    //  
-// 3) 

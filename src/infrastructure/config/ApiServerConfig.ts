@@ -20,6 +20,6 @@ export class ApiServerConfig {
 
   public static readonly KAKAO_API_KEY: string = get('KAKAO_REST_API_KEY').required().asString();
 
-  public static readonly KAKAO_TOKEN_URL: string = get('KAKAO_TOKEN_URL').required().asString();
+  public static readonly KAKAO_REDIRECT_URL: string = get('KAKAO_REDIRECT_URL').required().asString();
   
 }
