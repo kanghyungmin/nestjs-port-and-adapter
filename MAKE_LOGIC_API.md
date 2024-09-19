@@ -2,7 +2,7 @@
   - 일반 비지니스 로직을 구현하듯이, Controller <> Service <> Repository로 구성 
   - 하지만, 이들 사이 의존성을 줄이기 위해 Port와 Adapter을 적용
   - Controller 작성 예제
-'''
+```
 @Post('account')
     @HttpCode(HttpStatus.OK)
     @ApiBody({ type: HttpRestApiModelCreateUserBody }) 
@@ -22,9 +22,9 @@
     1) User Payload 정의 
     2) User Payload 에서 Domain 객체로 변환. 이때 Validation Check이 진행됨
     3) API Response 정의( API Docs, DTO 별도)
-'''
+```
   - Service Layer에서는 UseCase별로 Interface 및 Implementation 객체를 구성
-'''
+```
     # Usecase 인터페이스 정의(CreateUserUseCase.ts)
     export interface CreateUserUseCase extends TransactionalUseCase<CreateUserPort, UserUseCaseDto> {}
 
@@ -62,9 +62,9 @@
       },
       inject    : [UserDITokens.UserRepository]
     },
-'''
+```
   - Repository는 도메인 객체 기준 Interface와 Implementation 객체 구현
-'''
+```
     # User Repository 인터페이스 정의
     export interface UserRepositoryPort {
         findUser(by: {id?: string, email?: string, socialID? : string}) : Promise<Optional<User>>;
@@ -119,5 +119,4 @@
     }
 
     Repository Layer 역시 인터페이스를 통해서 구현부를 Nest가 주입함.
-'''
-
+```
