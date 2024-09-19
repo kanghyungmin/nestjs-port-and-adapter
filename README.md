@@ -21,7 +21,7 @@
  # 2) yarn migration:run
  ```
  ## 프로젝트 구조
- 
+   - [Link](https://github.com/kanghyungmin/nestjs-ddd/blob/dev/MAKE_LOGIC_API.md)
  ## API 작성 방법
    - [Link](https://github.com/kanghyungmin/nestjs-ddd/blob/dev/MAKE_LOGIC_API.md)
  
