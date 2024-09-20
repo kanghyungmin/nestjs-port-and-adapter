@@ -1,0 +1,37 @@
+name: Release Notes
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  generate-release-notes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Get Pull Requests
+        id: get_prs
+        run: |
+          PRS=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/pulls?state=closed" | \
+          jq '.[] | select(.merged_at != null) | "- [${.title}](${.html_url})"')
+          echo "::set-output name=pr_list::$PRS"
+
+      - name: Generate Release Notes
+        run: |
+          echo "## [${{ github.ref }}] - $(date +'%Y-%m-%d')" > release-notes.md
+          echo "" >> release-notes.md
+          echo "### 🚀 Pull Requests" >> release-notes.md
+          echo "${{ steps.get_prs.outputs.pr_list }}" >> release-notes.md
+
+      - name: Publish Release Notes
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          name: 'Release ${{ github.ref }}'  # 'release_name'을 'name'으로 변경
+          body: $(cat release-notes.md)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
