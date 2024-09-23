@@ -23,8 +23,8 @@ jobs:
       - name: Fetch PRs between tags
         id: fetch_prs
         run: |
-          TAG1=${{ github.event.before }}
-          TAG2=${{ github.event.after }}
+          TAG1=v0.0.1
+          TAG2=v0.0.2
           PRS=$(gh pr list --base main --state closed --json title,number,mergedAt --jq ".[] | \"#\(.number) \(.title) (merged at: \(.mergedAt))\"")
           echo "::set-output name=prs::$PRS"
 
