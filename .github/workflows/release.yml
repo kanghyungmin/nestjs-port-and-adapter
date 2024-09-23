@@ -28,7 +28,9 @@ jobs:
           echo "" >> release-notes.md
           echo "${{ env.pr_list }}" >> release-notes.md  # 환경 변수 사용
           echo "" >> release-notes.md
+          echo "(************)"
           cat release-notes.md
+          echo "(************)""
           echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}...${{ github.ref_name }}" >> release-notes.md
           
       - name: Publish Release Notes
