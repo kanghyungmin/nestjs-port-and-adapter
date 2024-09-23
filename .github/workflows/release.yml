@@ -24,7 +24,7 @@ jobs:
 
       - name: Generate Release Notes
         run: |
-          echo "## What's Changed" > release-notes.md
+          echo "## 🚀 Pull Requests" > release-notes.md
           echo "" >> release-notes.md
           echo "${{ env.pr_list }}" >> release-notes.md  # 환경 변수 사용
           echo "" >> release-notes.md
@@ -39,7 +39,7 @@ jobs:
           echo "body<<EOF" >> $GITHUB_ENV
           cat release-notes.md >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-          
+
       - name: Publish Release Notes
         uses: softprops/action-gh-release@v2  # 최신 버전으로 업데이트
         with:
