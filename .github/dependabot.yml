@@ -1,0 +1,12 @@
+version: 2
+updates:
+  # yarn 패키지의 종속성 업데이트
+  - package-ecosystem: "yarn"
+    directory: "/"
+    schedule:
+      interval: "weekly"  # 주기적으로 업데이트
+  # GitHub Actions 종속성 업데이트
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"   # 매일 업데이트
