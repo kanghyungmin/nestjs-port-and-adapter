@@ -33,12 +33,19 @@ jobs:
           cat release-notes.md
           echo "(************)"
           
+      - name: Read Release Notes into Variable
+        id: read_notes
+        run: |
+          echo "body<<EOF" >> $GITHUB_ENV
+          cat release-notes.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          
       - name: Publish Release Notes
         uses: softprops/action-gh-release@v2  # 최신 버전으로 업데이트
         with:
             tag_name: ${{ github.ref_name }}  # refs/tags/ 없이 태그 이름만 사용
             name: 'Release ${{ github.ref_name }}'
-            body: |
-              $(< release-notes.md)
+            body: ${{ env.body }}  # 환경 변수 사용
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
