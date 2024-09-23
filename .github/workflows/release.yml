@@ -12,12 +12,19 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4.1.7
 
-      - name: Get Pull Requests
-        id: get_prs
+      - name: Get Previous Tag
+        id: prev_tag
         run: |
+          PREV_TAG=$(git tag --sort=-v:refname | grep -E '^v[0-9]+' | sed -n '2p')
+          echo "previous_tag=${PREV_TAG}" >> $GITHUB_ENV
+
+      - name: Get Pull Requests Between Tags with Authors
+        id: get_prs_with_authors
+        run: |
+          COMPARE_URL="https://api.github.com/repos/${{ github.repository }}/compare/${{ env.previous_tag }}...${{ github.ref_name }}"
           PRS=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/pulls?state=closed" | \
-          jq -r '.[] | select(.merged_at != null) | "- [\(.title)](\(.html_url))"')
+          "$COMPARE_URL" | \
+          jq -r '.pulls[] | select(.merged_at != null) | "- [\(.title)](\(.html_url)) by @\(.user.login)"')  # PR 제목과 작성자
           echo "pr_list<<EOF" >> $GITHUB_ENV
           echo "$PRS" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
