@@ -26,12 +26,12 @@ jobs:
         run: |
           echo "## What's Changed" > release-notes.md
           echo "" >> release-notes.md
-          echo "$pr_list" >> release-notes.md  # 환경 변수 사용
+          echo "${{ steps.get_prs.outputs.pr_list }}" >> release-notes.md  # 환경 변수 사용
           echo "" >> release-notes.md
           echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}...${{ github.ref_name }}" >> release-notes.md
           
       - name: Publish Release Notes
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2  # 최신 버전으로 업데이트
         with:
             tag_name: ${{ github.ref_name }}  # refs/tags/ 없이 태그 이름만 사용
             name: 'Release ${{ github.ref_name }}'
