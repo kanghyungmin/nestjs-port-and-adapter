@@ -12,6 +12,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set up GitHub CLI
+        run: |
+          echo "Setting up GitHub CLI"
+          echo "${{ secrets.GITHUB_TOKEN }}" > $HOME/.gh_token
+          chmod 600 $HOME/.gh_token
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Fetch PRs between tags
         id: fetch_prs
         run: |
