@@ -1,4 +1,4 @@
-[![Release Notes](https://github.com/kanghyungmin/nestjs-ddd/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/kanghyungmin/nestjs-ddd/actions/workflows/release.yml)
+[![Release Notes](https://github.com/kanghyungmin/nestjs-ddd/actions/workflows/release.yml/badge.svg?event=release)](https://github.com/kanghyungmin/nestjs-ddd/actions/workflows/release.yml)
 
 
 ## 소 개 
