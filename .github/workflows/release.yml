@@ -15,7 +15,7 @@ jobs:
       - name: Get Previous Tag
         id: prev_tag
         run: |
-          PREV_TAG=$(git tag --sort=-v:refname | grep -E '^v[0-9]+' | sed -n '2p')
+          PREV_TAG=$(git tag --sort=-v:refname | grep -E '^v[0-9]+')
           if [ -z "$PREV_TAG" ]; then
           echo "No previous tag found, using default value v0.0.0"
           PREV_TAG="v0.0.0"  # 기본 태그 설정
