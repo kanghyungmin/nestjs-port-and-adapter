@@ -36,6 +36,6 @@ jobs:
             tag_name: ${{ github.ref_name }}  # refs/tags/ 없이 태그 이름만 사용
             name: 'Release ${{ github.ref_name }}'
             body: |
-              $(catrelease-notes.md)  # 파일 내용 읽기
+              $(cat release-notes.md)  # 파일 내용 읽기
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
