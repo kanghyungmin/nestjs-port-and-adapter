@@ -1,5 +1,4 @@
-[![Release Notes](https://github.com/kanghyungmin/nestjs-ddd/actions/workflows/release.yml/badge.svg?event=release)](https://github.com/kanghyungmin/nestjs-ddd/actions/workflows/release.yml)
-
+[![Release Notes](https://github.com/kanghyungmin/nestjs-ddd/actions/workflows/release.yml/badge.svg)](https://github.com/kanghyungmin/nestjs-ddd/actions/workflows/release.yml)
 
 ## 소 개 
  1) Port를 사용하여 최대한 layer간 의존성을 분리하는 구조로 작성되었으며  
