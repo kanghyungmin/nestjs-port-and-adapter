@@ -15,25 +15,36 @@ jobs:
       - name: Get Previous Tag
         id: prev_tag
         run: |
-          PREV_TAG=$(git tag --sort=-v:refname)  # 가장 최근 태그
+          PREV_TAG=$(git tag --sort=-v:refname | grep -E '^v[0-9]+' | sed -n '2p')
           if [ -z "$PREV_TAG" ]; then
-          echo "No previous tag found, using default value v0.0.0"
-          PREV_TAG="v0.0.0"  # 기본 태그 설정
+            echo "No previous tag found. Assuming this is the first release."
+            PREV_TAG=""
           fi
-          echo "Previous Tag: $PREV_TAG"
-          echo "${PREV_TAG}"
-          echo "$PREV_TAG"
-          echo "previous_tag=${PREV_TAG}"
-          echo "hello"
           echo "previous_tag=${PREV_TAG}" >> $GITHUB_ENV
 
-      - name: Get Pull Requests Between Tags with Authors
+      - name: Get Pull Requests Between Tags or All PRs
         id: get_prs_with_authors
         run: |
-          COMPARE_URL="https://api.github.com/repos/${{ github.repository }}/compare/${{ env.previous_tag }}...${{ github.ref_name }}"
-          PRS=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "$COMPARE_URL" | \
-          jq -r '.pulls[] | select(.merged_at != null) | "- [\(.title)](\(.html_url)) by @\(.user.login)"')  # PR 제목과 작성자
+          if [ -z "${{ env.previous_tag }}" ]; then
+            # First release case: Get all merged pull requests
+            PRS=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls?state=closed" | \
+            jq -r '.[] | select(.merged_at != null) | "- [\(.title)](\(.html_url)) by @\(.user.login)"')
+          else
+            # Compare previous tag with current tag
+            COMPARE_URL="https://api.github.com/repos/${{ github.repository }}/compare/${{ env.previous_tag }}...${{ github.ref_name }}"
+            echo "Comparing between ${COMPARE_URL}"
+            
+            PRS=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "$COMPARE_URL" | \
+            jq -r '.pulls[] | select(.merged_at != null) | "- [\(.title)](\(.html_url)) by @\(.user.login)"')
+          fi
+          
+          if [ -z "$PRS" ]; then
+            echo "No pull requests found."
+            PRS="No pull requests found for this release."
+          fi
+          
           echo "pr_list<<EOF" >> $GITHUB_ENV
           echo "$PRS" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
