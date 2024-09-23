@@ -15,7 +15,7 @@ jobs:
       - name: Get Previous Tag
         id: prev_tag
         run: |
-          PREV_TAG=$(git tag --sort=-v:refname | grep -E '^v[0-9]+' | sed -n '2p')
+          PREV_TAG=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+' | sed -n '2p')
           if [ -z "$PREV_TAG" ]; then
             echo "No previous tag found. Assuming this is the first release."
             PREV_TAG=""
