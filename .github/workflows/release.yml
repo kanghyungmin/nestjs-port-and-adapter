@@ -17,6 +17,7 @@ jobs:
         run: |
           PREV_TAG=$(git tag --sort=-v:refname | grep -E '^v[0-9]+' | sed -n '2p')
           echo "previous_tag=${PREV_TAG}"
+          echo "hello"
           echo "previous_tag=${PREV_TAG}" >> $GITHUB_ENV
 
       - name: Get Pull Requests Between Tags with Authors
