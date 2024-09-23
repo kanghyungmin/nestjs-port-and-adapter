@@ -55,10 +55,11 @@ jobs:
           echo "" >> release-notes.md
           echo "${{ env.pr_list }}" >> release-notes.md  # 환경 변수 사용
           echo "" >> release-notes.md
-          echo "(************)"
-          echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}...${{ github.ref_name }}" >> release-notes.md
-          cat release-notes.md
-          echo "(************)"
+          if [ -n "${{ env.previous_tag }}" ]; then
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ env.previous_tag }}...${{ github.ref_name }}" >> release-notes.md
+          else
+            echo "**Full Changelog**: First release, no previous tag to compare." >> release-notes.md
+          fi
           
       - name: Read Release Notes into Variable
         id: read_notes
