@@ -30,8 +30,8 @@ jobs:
       - name: Publish Release Notes
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          name: 'Release ${{ github.ref }}'  # 'release_name'을 'name'으로 변경
-          body: $(cat release-notes.md)
+            tag_name: ${{ github.ref_name }}  # refs/tags/ 없이 태그 이름만 사용
+            name: 'Release ${{ github.ref_name }}'
+            body: $(cat release-notes.md)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
