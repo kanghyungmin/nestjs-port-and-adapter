@@ -1,7 +1,7 @@
 version: 2
 updates:
   # yarn 패키지의 종속성 업데이트
-  - package-ecosystem: "yarn"
+  - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"  # 주기적으로 업데이트
