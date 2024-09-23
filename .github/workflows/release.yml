@@ -22,10 +22,11 @@ jobs:
 
       - name: Generate Release Notes
         run: |
-          echo "## [${{ github.ref }}] - $(date +'%Y-%m-%d')" > release-notes.md
+          echo "## What's Changed" > release-notes.md
           echo "" >> release-notes.md
-          echo "### 🚀 Pull Requests" >> release-notes.md
           echo "${{ steps.get_prs.outputs.pr_list }}" >> release-notes.md
+          echo "" >> release-notes.md
+          echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}...${{ github.ref_name }}" >> release-notes.md
           
       - name: Publish Release Notes
         uses: softprops/action-gh-release@v1
