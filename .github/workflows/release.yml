@@ -26,12 +26,13 @@ jobs:
           echo "" >> release-notes.md
           echo "### 🚀 Pull Requests" >> release-notes.md
           echo "${{ steps.get_prs.outputs.pr_list }}" >> release-notes.md
-
+          
       - name: Publish Release Notes
         uses: softprops/action-gh-release@v1
         with:
             tag_name: ${{ github.ref_name }}  # refs/tags/ 없이 태그 이름만 사용
             name: 'Release ${{ github.ref_name }}'
-            body: $(cat release-notes.md)
+            body: |
+              $(cat release-notes.md)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
