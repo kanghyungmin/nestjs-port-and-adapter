@@ -34,12 +34,18 @@ jobs:
             jq -r '.[] | select(.merged_at != null) | "- [\(.title)](\(.html_url)) by @\(.user.login)"')
           else
             # Compare previous tag with current tag
-            COMPARE_URL="https://api.github.com/repos/${{ github.repository }}/compare/${{ env.previous_tag }}...${{ github.ref_name }}"
+            COMPARE_URL="https://api.github.com/repos/${{ github.repository }}/compare/${{ steps.prev_tag.outputs.previous_tag }}...${{ github.ref_name }}"
             echo "Comparing between ${COMPARE_URL}"
-            
-            PRS=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "$COMPARE_URL" | \
-            jq -r '.pulls[] | select(.merged_at != null) | "- [\(.title)](\(.html_url)) by @\(.user.login)"')
+
+            RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$COMPARE_URL")
+            if echo "$RESPONSE" | jq -e . > /dev/null; then
+              # PRs가 비어 있는지 확인합니다.
+              PRS=$(echo "$RESPONSE" | jq -r '.pulls | if length == 0 then "No pull requests found for this release." else .[] | select(.merged_at != null) | "- [\(.title)](\(.html_url)) by @\(.user.login)" end')
+            else
+              # 에러 응답이 발생했을 경우
+              echo "Error in comparison response: $RESPONSE"
+              PRS="No pull requests found for this release."
+            fi
           fi
           
           if [ -z "$PRS" ]; then
