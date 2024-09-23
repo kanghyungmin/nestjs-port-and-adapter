@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Get Pull Requests
         id: get_prs
@@ -18,13 +18,15 @@ jobs:
           PRS=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/pulls?state=closed" | \
           jq -r '.[] | select(.merged_at != null) | "- [\(.title)](\(.html_url))"')
-          echo "::set-output name=pr_list::$PRS"
+          echo "pr_list<<EOF" >> $GITHUB_ENV
+          echo "$PRS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Generate Release Notes
         run: |
           echo "## What's Changed" > release-notes.md
           echo "" >> release-notes.md
-          echo "${{ steps.get_prs.outputs.pr_list }}" >> release-notes.md
+          echo "$pr_list" >> release-notes.md  # 환경 변수 사용
           echo "" >> release-notes.md
           echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ github.ref_name }}...${{ github.ref_name }}" >> release-notes.md
           
@@ -34,6 +36,6 @@ jobs:
             tag_name: ${{ github.ref_name }}  # refs/tags/ 없이 태그 이름만 사용
             name: 'Release ${{ github.ref_name }}'
             body: |
-              $(cat release-notes.md)
+              $(< release-notes.md)  # 파일 내용 읽기
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
