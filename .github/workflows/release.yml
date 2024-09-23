@@ -39,7 +39,7 @@ jobs:
             
             PRS=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             "$COMPARE_URL" | \
-            jq -r '.pulls[] | select(.merged_at != null) | "- [\(.title)](\(.html_url)) by @\(.user.login)"')
+            jq -r '.[] | select(.merged_at != null) | "- [\(.title)](\(.html_url)) by @\(.user.login)"')
           fi
           
           if [ -z "$PRS" ]; then
