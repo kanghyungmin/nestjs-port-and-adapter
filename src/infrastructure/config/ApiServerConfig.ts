@@ -30,6 +30,6 @@ export class ApiServerConfig {
 
   public static readonly APPLE_REDIRECT_URL: string = get('APPLE_REDIRECT_URL').required().asString();
 
-  public static readonly APPLE_KEYFILE_PATH: string = get('APPLE_KEYFILE_PATH').required().asString();
+  public static readonly APPLE_PRIVATE_KEY: string = get('APPLE_PRIVATE_KEY').required().asString();
   
 }
