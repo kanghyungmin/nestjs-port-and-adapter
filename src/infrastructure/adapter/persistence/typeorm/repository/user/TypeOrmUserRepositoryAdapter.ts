@@ -29,7 +29,7 @@ export class TypeOrmUserRepositoryAdapter extends Repository<TypeOrmUser> implem
       }
     }
   
-    public async findUser(by: { id?: string; email?: string }): Promise<Optional<User>> {
+    public async findUser(by: { id?: string; email?: string,  socialID? : string }): Promise<Optional<User>> {
       const query = this.buildUserQueryBuilder();
       this.extendQueryWithByProperties(by, query);
   

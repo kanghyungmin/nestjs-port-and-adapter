@@ -8,8 +8,10 @@ export type HttpUserPayload = {
 };
 
 export type HttpKakaoUserPayload = Omit<HttpUserPayload, 'email'>
+export type HttpAppleUserPayload = Omit<HttpUserPayload, 'email'> //향후, 달라질 수 있음
 export type HttpRequestWithUser = Request & {user: HttpUserPayload};
 export type HttpRequestWithKaKaoUser = Request & {user: HttpKakaoUserPayload};
+export type HttpRequestWithAppleUser = Request & {user: HttpAppleUserPayload};
 
 export type HttpJwtPayload = {
   id: string,
