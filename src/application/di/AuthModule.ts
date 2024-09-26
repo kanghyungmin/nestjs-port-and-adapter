@@ -8,6 +8,7 @@ import { UserModule } from "@application/di/UserModule";
 import { HttpAuthService } from "@application/auth/HttpAuthService";
 import { HttpJwtStrategy } from "@application/auth/passport/HttpJwtStrategy";
 import { HttpKakaoStratege } from "@application/auth/passport/HttpKakaOStratege";
+import { HttpAppleStrategy } from "@application/auth/passport/HttpAppleStrategy";
 
 
 @Module({
@@ -26,6 +27,8 @@ import { HttpKakaoStratege } from "@application/auth/passport/HttpKakaOStratege"
         HttpAuthService, 
         HttpLocalStrategy, 
         HttpJwtStrategy, 
-        HttpKakaoStratege]
+        HttpKakaoStratege,
+        HttpAppleStrategy,
+    ],
 })
 export class AuthModule {}
