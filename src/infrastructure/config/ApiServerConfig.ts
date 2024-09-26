@@ -21,5 +21,15 @@ export class ApiServerConfig {
   public static readonly KAKAO_API_KEY: string = get('KAKAO_REST_API_KEY').required().asString();
 
   public static readonly KAKAO_REDIRECT_URL: string = get('KAKAO_REDIRECT_URL').required().asString();
+
+  public static readonly APPLE_CLIENTID: string = get('APPLE_CLIENTID').required().asString();
+
+  public static readonly APPLE_TEAMID: string = get('APPLE_TEAMID').required().asString();
+
+  public static readonly APPLE_KEYID: string = get('APPLE_KEYID').required().asString();
+
+  public static readonly APPLE_REDIRECT_URL: string = get('APPLE_REDIRECT_URL').required().asString();
+
+  public static readonly APPLE_KEYFILE_PATH: string = get('APPLE_KEYFILE_PATH').required().asString();
   
 }
