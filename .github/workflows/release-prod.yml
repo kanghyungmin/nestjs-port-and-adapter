@@ -1,0 +1,132 @@
+name: Deploy to Amazon EKS On Prod Pod
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+#ECR and EKS
+env:
+  AWS_REGION: ap-northeast-2
+  ECR_REPOSITORY: prod/api-server
+  CONTAINER_NAME: prod-api-server  
+
+jobs:
+  generate-release-notes: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0  # 모든 커밋과 태그를 가져옵니다.
+
+      - name: Get Previous Tag
+        id: prev_tag
+        run: |
+          PREV_TAG=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+' | sed -n '2p')
+          if [ -z "$PREV_TAG" ]; then
+            echo "No previous tag found. Assuming this is the first release."
+            PREV_TAG=""
+          fi
+          echo "previous_tag=${PREV_TAG}" >> $GITHUB_ENV
+
+      - name: Get Pull Requests Between Tags or All PRs
+        id: get_prs_with_authors
+        run: |
+          EXCLUDED_USER="dependabot[bot]"
+          if [ -z "${{ env.previous_tag }}" ]; then
+            PRS=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls?state=closed" | \
+            jq --arg excluded_user "$EXCLUDED_USER" -r '
+              .[] | select(.merged_at != null and .user.login != $excluded_user) | "- [\(.title)](\(.html_url)) by @\(.user.login)"')
+          else
+              # Compare previous tag with current tag
+            COMPARE_URL="https://api.github.com/repos/${{ github.repository }}/compare/${{ env.previous_tag }}...${{ github.ref_name }}"
+            echo "Comparing between ${COMPARE_URL}"
+
+            RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$COMPARE_URL")
+            if echo "$RESPONSE" | jq -e . > /dev/null; then
+              PR_NUMBERS=$(echo "$RESPONSE" | jq -r '.commits[].commit.message' | grep -oE '#[0-9]+' | tr -d '#')
+              PRS=""
+              for PR_NUMBER in $PR_NUMBERS; do
+                PR=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER" | \
+                jq --arg excluded_user "$EXCLUDED_USER" -r '
+                  select(.merged_at != null and .user.login != $excluded_user) | "- [\(.title)](\(.html_url)) by @\(.user.login)"')
+                if [ -n "$PR" ]; then
+                  PRS="$PRS\n$PR"
+                fi
+              done
+            else
+              echo "Error in comparison response: $RESPONSE"
+              PRS="No pull requests found for this release."
+            fi
+          fi
+          
+          if [ -z "$PRS" ]; then
+            echo "No pull requests found."
+            PRS="No pull requests found for this release."
+          fi
+          
+          echo "pr_list<<EOF" >> $GITHUB_ENV
+          echo -e "$PRS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Generate Release Notes
+        run: |
+          echo "## 🚀 Pull Requests" > release-notes.md
+          echo "" >> release-notes.md
+          echo "${{ env.pr_list }}" >> release-notes.md  # 환경 변수 사용
+          echo "" >> release-notes.md
+          if [ -n "${{ env.previous_tag }}" ]; then
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ env.previous_tag }}...${{ github.ref_name }}" >> release-notes.md
+          else
+            echo "**Full Changelog**: First release, no previous tag to compare." >> release-notes.md
+          fi
+          
+      - name: Read Release Notes into Variable
+        id: read_notes
+        run: |
+          echo "body<<EOF" >> $GITHUB_ENV
+          cat release-notes.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Publish Release Notes
+        uses: softprops/action-gh-release@v2  # 최신 버전으로 업데이트
+        with:
+            tag_name: ${{ github.ref_name }}  # refs/tags/ 없이 태그 이름만 사용
+            name: 'Release ${{ github.ref_name }}'
+            body: ${{ env.body }}  # 환경 변수 사용
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  deploy:
+    name: Deploy On Prod Server
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to EKS
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./docker/dev/dockerfile.dev .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
