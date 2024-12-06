@@ -5,7 +5,6 @@ on:
     tags:
       - 'v*'
 
-#ECR and EKS
 env:
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: prod/api-server
@@ -18,17 +17,13 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4.2.2
         with:
-          fetch-depth: 0  # 모든 커밋과 태그를 가져옵니다.
+          fetch-depth: 0
 
       - name: Get Previous Tag
         id: prev_tag
         run: |
           PREV_TAG=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+' | sed -n '2p')
-          if [ -z "$PREV_TAG" ]; then
-            echo "No previous tag found. Assuming this is the first release."
-            PREV_TAG=""
-          fi
-          echo "previous_tag=${PREV_TAG}" >> $GITHUB_ENV
+          echo "previous_tag=${PREV_TAG:-}" >> $GITHUB_ENV
 
       - name: Get Pull Requests Between Tags or All PRs
         id: get_prs_with_authors
@@ -49,10 +44,13 @@ jobs:
               PR_NUMBERS=$(echo "$RESPONSE" | jq -r '.commits[].commit.message' | grep -oE '#[0-9]+' | tr -d '#')
               PRS=""
               for PR_NUMBER in $PR_NUMBERS; do
+                echo "Getting PR #$PR_NUMBER"
+                echo "secret: ${{ secrets.GITHUB_TOKEN }}"
                 PR=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                 "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER" | \
                 jq --arg excluded_user "$EXCLUDED_USER" -r '
                   select(.merged_at != null and .user.login != $excluded_user) | "- [\(.title)](\(.html_url)) by @\(.user.login)"')
+                echo "PR: $PR"
                 if [ -n "$PR" ]; then
                   PRS="$PRS\n$PR"
                 fi
@@ -71,7 +69,7 @@ jobs:
           echo "pr_list<<EOF" >> $GITHUB_ENV
           echo -e "$PRS" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-
+          
       - name: Generate Release Notes
         run: |
           echo "## 🚀 Pull Requests" > release-notes.md
@@ -99,34 +97,53 @@ jobs:
             body: ${{ env.body }}  # 환경 변수 사용
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
   deploy:
     name: Deploy On Prod Server
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build, tag, and push image to Amazon ECR
-      id: build-image
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: ${{ github.sha }}
-      run: |
-        # Build a docker container and
-        # push it to ECR so that it can
-        # be deployed to EKS
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./docker/dev/dockerfile.dev .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+      - name: Build and Push Docker Image
+        id: build-image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:${{ env.IMAGE_TAG }} -f ./docker/dev/dockerfile.dev .
+          docker push ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:${{ env.IMAGE_TAG }}
+
+      - name: Setup Kustomize
+        uses: imranismail/setup-kustomize@v1
+
+      - name: Checkout Infra Repository
+        uses: actions/checkout@v2
+        with:
+          repository: Second-Fit/aws-Infra
+          ref: master
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          path: aws-Infra
+
+      - name: Update Kubernetes Resources
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          cd aws-Infra/sample-3/base
+          kustomize edit set image ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY=${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:${{ env.IMAGE_TAG }}
+          git config --global user.email "hmkkang0922@daum.net"
+          git config --global user.name "github-actions"
+          git commit -am "Update image tag"
+          git push
