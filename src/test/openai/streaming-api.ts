@@ -2,7 +2,7 @@ import axios from 'axios';
 import { EventSource } from 'eventsource';
 import * as fs from 'fs';
 
-const OPENAI_API_KEY = 'sk-svcacct-P1kB_d6qD2P6zLOqlcakLNPPxLar5aVwGPSgPjyNpC6a3LHTdnsJHXFmlUDVWI3qGkfViT3BlbkFJevRtMBHDwfvvskHxJuA6RsPQW4TrohR0gw2P7g4U8zwjHoYfKl2ZHud1EZ6z_12Lai7YwA'; // OpenAI API 키를 입력하세요.
+const OPENAI_API_KEY = ''
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
 let imagePath = "./test/test3.jpg";

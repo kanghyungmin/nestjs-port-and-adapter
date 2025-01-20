@@ -25,7 +25,7 @@ const imagePath = "./test/test3.jpg";
 const startTime = Date.now();
 
 const openai = new OpenAI({
-  apiKey: "sk-svcacct-P1kB_d6qD2P6zLOqlcakLNPPxLar5aVwGPSgPjyNpC6a3LHTdnsJHXFmlUDVWI3qGkfViT3BlbkFJevRtMBHDwfvvskHxJuA6RsPQW4TrohR0gw2P7g4U8zwjHoYfKl2ZHud1EZ6z_12Lai7YwA",
+  apiKey: "",
 });
 // Function to execute OpenAI chat API call
 async function executeOpenAIRequest(imageBase64, index) {
