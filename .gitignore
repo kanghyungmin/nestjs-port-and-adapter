@@ -3,6 +3,22 @@
 /node_modules
 /build
 
+src/test/kafka+msa/kafka-msa-client/dist
+src/test/kafka+msa/kafka-msa-client/node_modules
+src/test/kafka+msa/kafka-msa-client/build
+
+src/test/kafka+msa/kafka-msa-server/dist
+src/test/kafka+msa/kafka-msa-server/node_modules
+src/test/kafka+msa/kafka-msa-server/build
+
+src/test/socket/client/node_modules
+src/test/socket/client/dist
+src/test/socket/client/build
+
+src/test/socket/socket-server/node_modules
+src/test/socket/socket-server/dist
+src/test/socket/socket-server/build
+
 # Logs
 logs
 *.log
@@ -54,3 +70,7 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+src/test/kafka+msa/kafka-msa-client/node_modules/@angular-devkit/core/node_modules/ajv/dist/vocabularies/applicator/if.js.map
+src/test/kafka+msa/kafka-deploy/docker-compose.yml
+src/test/socket/client/node_modules/engine.io-client/build/esm/transports/polling-xhr.node.js
