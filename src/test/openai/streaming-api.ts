@@ -2,7 +2,7 @@ import axios from 'axios';
 import { EventSource } from 'eventsource';
 import * as fs from 'fs';
 
-const OPENAI_API_KEY = ''
+// const OPENAI_API_KEY = ''
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
 let imagePath = "./test/test3.jpg";
