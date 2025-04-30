@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -130,7 +130,7 @@ jobs:
         uses: imranismail/setup-kustomize@v1
 
       - name: Checkout Infra Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: Second-Fit/aws-Infra
           ref: master
