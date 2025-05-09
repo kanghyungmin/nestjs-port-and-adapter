@@ -32,7 +32,7 @@
     "@nestjs/cqrs": "^10.2.7",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/passport": "^10.0.3",
-    "@nestjs/platform-express": "^10.4.4",
+    "@nestjs/platform-express": "^10.4.12",
     "@nestjs/swagger": "^7.4.2",
     "@nestjs/typeorm": "^10.0.2",
     "bcryptjs": "^2.4.3",
