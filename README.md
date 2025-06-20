@@ -8,6 +8,9 @@
  4) (주요)기술 스택
     : Postgres / Typeorm
 
+ ## 브랜치 전략
+   - [Link](https://github.com/kanghyungmin/nestjs-ddd/blob/dev/PROJECT_SCHEME.md)
+
  ## 실행 순서 
  ```
  # DB Container Build & Deploy 
